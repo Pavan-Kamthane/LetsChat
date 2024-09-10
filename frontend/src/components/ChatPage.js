@@ -6,7 +6,7 @@ const ChatPage = () => {
   const [chats, setChats] = useState([]);
   const fetchChats = async () => {
     // const data  =  await axios.get("/api/chat") // whole data dete
-    const { data } = await axios.get("/api/chat"); // destructure  data // ya sathi pakage.json mde proxy link takav lgte
+    const { data } = await axios.get("http://127.0.0.1:5000/api/chat/api/chat"); // destructure  data // ya sathi pakage.json mde proxy link takav
 
     console.log(data);
     setChats(data);
