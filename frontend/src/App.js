@@ -5,6 +5,7 @@ import ChatPage from './pages/ChatPage';
 
 function App() {
   return (
+    
     <div className="App">
       <Route path="/" component={Homepage} exact/> 
       {/* why exact: because  we want to match the exact path ani dusra path vr home yeu lgl mnun*/}
