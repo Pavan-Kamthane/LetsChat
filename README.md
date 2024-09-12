@@ -1,2 +1,2 @@
 # LetsChat
- Tech Stack: 
+ Tech Stack: MERN
