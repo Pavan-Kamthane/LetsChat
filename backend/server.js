@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const connetDB = require('./config/db.js');
 const colors = require('colors');
 const userRoutes = require('./routes/userRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 const { errorHandler, notFound } = require('./middleware/errorMiddleware.js');
 // const cors = require('cors');
 
@@ -31,6 +32,8 @@ app.use('/api/user', userRoutes)
 // it will call the userRoutes function which is defined in the userRoutes.js file
 // and it will pass the request and response objects to the userRoutes function.
 // the userRoutes function will then handle the request and send a response back to the client.
+
+app.use('/api/chat',chatRoutes)
 
 app.use(notFound)
 app.use(errorHandler)
