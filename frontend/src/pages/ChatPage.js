@@ -24,6 +24,10 @@ const ChatPage = () => {
           <h2>{chat.chatName}</h2>
         </div>
       ))} */}
+
+      <h2>
+        hiiiiiii
+      </h2>
     </div>
   );
 };

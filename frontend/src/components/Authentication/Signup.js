@@ -124,76 +124,69 @@ const Signup = () => {
     }
 
     const submitHandler = async () => {
-        if (
-            !name ||
-            !email ||
-            !password ||
-            !confirmpassword
-        ) {
+        if (!name || !email || !password || !confirmpassword) {
             toast({
-                title: "Please fill all the required fileds",
-                status: "waring",
+                title: "Please fill all the required fields",
+                status: "warning",
                 duration: 5000,
                 isClosable: true,
                 position: "bottom",
             });
-            setLoading(false)
+            setLoading(false);
             return;
         }
 
-        if (
-            password !== confirmpassword
-        ) {
+        if (password !== confirmpassword) {
             toast({
-                title: "Password does not matches",
-                status: "waring",
+                title: "Passwords do not match",
+                status: "warning",
                 duration: 5000,
                 isClosable: true,
                 position: "bottom",
             });
-            setLoading(false)
+            setLoading(false);
             return;
         }
 
         try {
             const config = {
                 headers: {
-                    "Content-Type": "application/json"
-                }
-            }
+                    "Content-Type": "application/json",
+                },
+            };
 
             const { data } = await axios.post(
-                "/api/user",   
-                {
-                    name,email,password, pic
-                },
+                "/api/user",
+                { name, email, password, pic },
                 config
             );
 
             toast({
-                title: "Registration Sucessful",
+                title: "Registration Successful",
                 status: "success",
                 duration: 5000,
                 isClosable: true,
                 position: "bottom",
             });
 
-            localStorage.setItem('userInfo')
-            setLoading(false)
-            history.push('/chats')
+            localStorage.setItem("userInfo", JSON.stringify(data));  // Fixed the localStorage line
+            setLoading(false);
+            history.push("/chats");
         } catch (error) {
             toast({
-                title: "Error occurs",
-                description:error.response.data.messsage,
+                title: "Error occurred",
+                description: error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
                 status: "error",
                 duration: 5000,
                 isClosable: true,
                 position: "bottom",
             });
-            setLoading(false)
-        } 
+            setLoading(false);
+        }
+    };
 
-    }
 
     return (
         <VStack
