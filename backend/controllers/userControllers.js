@@ -62,10 +62,34 @@ const authUser = asyncHandler(async (req, res) => {
     }
 });
 
+// /api/user?search=pavan
+const allUser = asyncHandler(async (req, res) => {
+    const keyword = req.query.search ? {
+        $or: [
+            {name: {$regex: req.query.search, $options: 'i'}}, 
+            // what is regex in mongodb :
+
+            {email: {$regex: req.query.search, $options: 'i'}}
+        ]
+    }:{}
+
+    // i have to sen this keyword query to mongo
+    const users = await User.find(keyword)
+    .find(
+        {
+            _id: {
+                $ne: req.user._id // means  dont show the user who is logged in (current user)
+
+            }
+        }
+    )
 
 
+    res.send(users)
+})
 
 module.exports = {
     registerUser,
-    authUser
+    authUser,
+    allUser
 }
