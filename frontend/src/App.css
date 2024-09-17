@@ -3,5 +3,5 @@
 .App{
     min-height: 100vh;
     display: flex;
-    background: linear-gradient(45deg,rgb(215, 215, 255),rgb(255, 166, 0));
+    background: linear-gradient(45deg,rgb(192, 106, 0),rgb(255, 247, 0));
 }
