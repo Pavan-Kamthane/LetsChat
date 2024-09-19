@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { useToast } from '@chakra-ui/react'
 import axios from 'axios'
 import {useHistory} from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'  // UseNavigate instead of useHistory
 
 
 const Signup = () => {
@@ -269,7 +268,7 @@ const Signup = () => {
             </FormControl>
 
 
-            <FormControl id={"pic"} isRequired >
+            <FormControl id={"pic"}  >
                 <FormLabel>Upload your picture</FormLabel>
                 <Input
                     type='file'
