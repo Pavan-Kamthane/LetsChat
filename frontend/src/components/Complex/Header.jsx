@@ -15,12 +15,18 @@ import { BellIcon, ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
 import React, { useState } from "react";
 import { ChatState } from "../../Context/ChatProvider";
 import ProfileModal from "./ProfileModal";
+import { useHistory } from "react-router-dom";
 
 const Header = () => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
+  const history = useHistory();
+  const logoutHandler = () => {
+    localStorage.removeItem("userInfo");
+    history.push("/");
+  };
 
   const { user } = ChatState();
   return (
@@ -79,7 +85,7 @@ const Header = () => {
             </ProfileModal>
             {/* <Divider bg={'black'} /> */}
             <MenuDivider bg={"black"} />
-            <MenuItem color={"black"} bg={"white"}>
+            <MenuItem color={"black"} bg={"white"} onClick={logoutHandler}>
               Logout
             </MenuItem>
           </MenuList>

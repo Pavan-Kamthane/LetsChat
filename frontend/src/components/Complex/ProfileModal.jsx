@@ -9,8 +9,10 @@ import {
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/react";
+import { useHistory } from "react-router-dom";
 const ProfileModal = ({ user, children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  
   return (
     <>
       {children ? (
@@ -25,9 +27,9 @@ const ProfileModal = ({ user, children }) => {
         />
       )}
 
-      <Modal size={'lg'} isCentered isOpen={isOpen} onClose={onClose}>
+      <Modal size={"lg"} isCentered isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent h={'410px'}>
+        <ModalContent h={"410px"}>
           <ModalHeader
             display={"flex"}
             justifyContent={"center"}
@@ -37,12 +39,12 @@ const ProfileModal = ({ user, children }) => {
             {user.name}
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody 
-            display={'flex'}
-            flexDir={'column'}
-            alignItems={'center'}
-            justifyContent={'center'}
-            gap={'10px'}
+          <ModalBody
+            display={"flex"}
+            flexDir={"column"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            gap={"10px"}
           >
             {user.pic ? (
               <Image
