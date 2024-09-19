@@ -14,6 +14,7 @@ import {
 import { BellIcon, ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
 import React, { useState } from "react";
 import { ChatState } from "../../Context/ChatProvider";
+import ProfileModal from "./ProfileModal";
 
 const Header = () => {
   const [search, setSearch] = useState("");
@@ -71,9 +72,11 @@ const Header = () => {
           </MenuButton>
 
           <MenuList bg={"white"}>
-            <MenuItem color={"black"} bg={"white"}>
-              My Profile
-            </MenuItem>
+            <ProfileModal user={user}>
+              <MenuItem>
+                My Profile
+              </MenuItem>
+            </ProfileModal>
             {/* <Divider bg={'black'} /> */}
             <MenuDivider bg={"black"} />
             <MenuItem color={"black"} bg={"white"}>
