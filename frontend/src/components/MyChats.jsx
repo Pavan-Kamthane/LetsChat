@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { ChatState } from "../Context/ChatProvider";
-import { Avatar, Box, HStack, Stack, Text, useToast, VStack } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  HStack,
+  Stack,
+  Text,
+  useToast,
+  VStack,
+} from "@chakra-ui/react";
 import { Button } from "@chakra-ui/button";
 import axios from "axios";
 import { AddIcon } from "@chakra-ui/icons";
 import ChatLoading from "./ChatLoading";
 import { getSender } from "../config/ChatLogics";
-
+import GroupChatModal from "./Complex/GroupChatModal";
 
 const MyChats = () => {
   const [loggedUser, setLoggedUser] = useState();
@@ -64,17 +72,19 @@ const MyChats = () => {
         justifyContent="space-between"
         alignItems="center"
         // bg={"gray"}
-        fontWeight={'bold'}
+        fontWeight={"bold"}
       >
         <Text>My चर्चा</Text>
-        <Button
-          color={"black"}
-          d="flex"
-          fontSize={{ base: "17px", md: "10px", lg: "17px" }}
-          rightIcon={<AddIcon />}
-        >
-          New Group Chat
-        </Button>
+        <GroupChatModal>
+          <Button
+            color={"black"}
+            d="flex"
+            fontSize={{ base: "17px", md: "10px", lg: "17px" }}
+            rightIcon={<AddIcon />}
+          >
+            New Group Chat
+          </Button>
+        </GroupChatModal>
       </HStack>
 
       <Box
