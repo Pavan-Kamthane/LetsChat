@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   FormControl,
   Input,
@@ -16,6 +17,7 @@ import React, { useState, useEffect } from "react";
 import { ChatState } from "../../Context/ChatProvider";
 import axios from "axios";
 import UserListItem from "../User/UserListItem";
+import UserBadgeItem from "../User/UserBadgeItem";
 
 const GroupChatModal = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -72,10 +74,23 @@ const GroupChatModal = ({ children }) => {
 
   const handleGroup = (userToAdd) => {
     // Handle adding a user to the group
-    if(selectedUsers.includes(userToAdd)){
-      
+    if (selectedUsers.includes(userToAdd)) {
+      toast({
+        title: "User already added",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+      return;
     }
+
+    setSelectedUsers([...selectedUsers, userToAdd]); // Add user to selected users array
   };
+
+ const handleDelete = (delUser) => {
+   setSelectedUsers(selectedUsers.filter((sel) => sel._id !== delUser._id));
+ };
 
   const handleSubmit = () => {
     // Handle group creation
@@ -111,6 +126,17 @@ const GroupChatModal = ({ children }) => {
                 onChange={(e) => setSearch(e.target.value)}
               />
             </FormControl>
+
+            {/* display selected users */}
+            <Box w={"100%"} display={"flex"} flexWrap={"wrap"}>
+              {selectedUsers.map((u) => (
+                <UserBadgeItem
+                  key={u._id}
+                  user={u}
+                  handleFunction={() => handleDelete(u)}
+                />
+              ))}
+            </Box>
 
             {/* Display loading or user search results */}
             {loading ? (
