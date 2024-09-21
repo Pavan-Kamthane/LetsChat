@@ -30,7 +30,7 @@ const MyChats = () => {
       };
 
       const { data } = await axios.get("/api/chat", config);
-      console.log(data);
+      // console.log(data);
       setChats(data);
     } catch (error) {
       toast({
@@ -74,7 +74,11 @@ const MyChats = () => {
         // bg={"gray"}
         fontWeight={"bold"}
       >
-        <Text>My चर्चा</Text>
+        <Text
+          // responsive font size
+          fontSize={{ base: "24px", md: "30px" }}
+        
+        >My चर्चा</Text>
         <GroupChatModal>
           <Button
             color={"black"}

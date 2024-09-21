@@ -12,13 +12,14 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ChatState } from "../../Context/ChatProvider";
 import axios from "axios";
+import UserListItem from "../User/UserListItem";
 
 const GroupChatModal = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [groupChatName, setGroupChatName] = useState();
+  const [groupChatName, setGroupChatName] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -28,6 +29,17 @@ const GroupChatModal = ({ children }) => {
 
   const { user, chats, setChats } = ChatState();
 
+  useEffect(() => {
+    // Debouncing logic
+    const handleDebounceSearch = setTimeout(() => {
+      if (search) {
+        handleSearch(search);
+      }
+    }, 500); // Adjust the delay as necessary (500ms in this case)
+
+    return () => clearTimeout(handleDebounceSearch); // Cleanup timeout on unmount
+  }, [search]);
+
   const handleSearch = async (query) => {
     setSearch(query);
     if (!query) {
@@ -36,29 +48,38 @@ const GroupChatModal = ({ children }) => {
 
     try {
       setLoading(true);
-
       const config = {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       };
-
-      const { data } = await axios.get(`/api/user?search=${search}`, config);
-    //   console.log(data); 
-    setLoading(false)
-    setSearchResult(data);
+      const { data } = await axios.get(`/api/user?search=${query}`, config);
+      // console.log(data)
+      setLoading(false);
+      setSearchResult(data);
     } catch (error) {
-        toast({
-          title: "Error Occured!",
-          description: "Failed to Load the Search Results",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-          position: "bottom-left",
-        });
+      toast({
+        title: "Error Occurred!",
+        description: "Failed to Load the Search Results",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-left",
+      });
+      setLoading(false);
     }
   };
-  const handleSubmit = () => {};
+
+  const handleGroup = (userToAdd) => {
+    // Handle adding a user to the group
+    if(selectedUsers.includes(userToAdd)){
+      
+    }
+  };
+
+  const handleSubmit = () => {
+    // Handle group creation
+  };
 
   return (
     <>
@@ -87,21 +108,28 @@ const GroupChatModal = ({ children }) => {
               <Input
                 placeholder="Add users eg: Pavan, Vedant, Athrva, Varad"
                 mb={1}
-                onChange={(e) => {
-                  handleSearch(e.target.value);
-                }}
+                onChange={(e) => setSearch(e.target.value)}
               />
             </FormControl>
-            {/* search users */}
-            {/* render serach user */}
+
+            {/* Display loading or user search results */}
+            {loading ? (
+              <div>Loading...</div>
+            ) : (
+              searchResult
+                ?.slice(0, 7)
+                .map((user) => (
+                  <UserListItem
+                    key={user._id}
+                    user={user}
+                    handleFunction={() => handleGroup(user)}
+                  />
+                ))
+            )}
           </ModalBody>
 
           <ModalFooter>
-            <Button
-              colorScheme="orange"
-              mr={3}
-              // onClick={handleSubmit}
-            >
+            <Button colorScheme="orange" mr={3} onClick={handleSubmit}>
               Create Group
             </Button>
           </ModalFooter>
