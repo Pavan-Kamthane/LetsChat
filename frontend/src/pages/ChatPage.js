@@ -12,7 +12,7 @@ const ChatPage = () => {
       {user && <Header/>}
       <Box 
         display={'flex'}
-        justifyContent={'space-between'}
+        justifyContent={'space-evenly'}
         w={'100%'}
         h={'91.5vh'}
 

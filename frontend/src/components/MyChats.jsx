@@ -60,7 +60,8 @@ const MyChats = () => {
       borderRadius="lg"
       borderWidth="1px"
       mt={2}
-      ml={2}
+      m={2}
+      // ml={2}
     >
       <HStack
         pb={3}
