@@ -16,7 +16,7 @@ import ChatLoading from "./ChatLoading";
 import { getSender } from "../config/ChatLogics";
 import GroupChatModal from "./Complex/GroupChatModal";
 
-const MyChats = () => {
+const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
   const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState();
   const toast = useToast();
@@ -47,7 +47,7 @@ const MyChats = () => {
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fetchChats();
-  }, []);
+  }, [ fetchAgain ]);
 
   return (
     <Box
@@ -78,8 +78,9 @@ const MyChats = () => {
         <Text
           // responsive font size
           fontSize={{ base: "24px", md: "30px" }}
-        
-        >My चर्चा</Text>
+        >
+          My चर्चा
+        </Text>
         <GroupChatModal>
           <Button
             color={"black"}
