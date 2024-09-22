@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { ChatState } from "../Context/ChatProvider";
-import { Avatar, Box, HStack, Stack, Text, useToast, VStack } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  HStack,
+  Stack,
+  Text,
+  useToast,
+  VStack,
+} from "@chakra-ui/react";
 import { Button } from "@chakra-ui/button";
 import axios from "axios";
 import { AddIcon } from "@chakra-ui/icons";
 import ChatLoading from "./ChatLoading";
 import { getSender } from "../config/ChatLogics";
+import GroupChatModal from "./Complex/GroupChatModal";
 
-
-const MyChats = () => {
+const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
   const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState();
   const toast = useToast();
@@ -22,7 +30,7 @@ const MyChats = () => {
       };
 
       const { data } = await axios.get("/api/chat", config);
-      console.log(data);
+      // console.log(data);
       setChats(data);
     } catch (error) {
       toast({
@@ -39,7 +47,7 @@ const MyChats = () => {
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fetchChats();
-  }, []);
+  }, [ fetchAgain ]);
 
   return (
     <Box
@@ -52,7 +60,8 @@ const MyChats = () => {
       borderRadius="lg"
       borderWidth="1px"
       mt={2}
-      ml={2}
+      m={2}
+      // ml={2}
     >
       <HStack
         pb={3}
@@ -64,17 +73,24 @@ const MyChats = () => {
         justifyContent="space-between"
         alignItems="center"
         // bg={"gray"}
-        fontWeight={'bold'}
+        fontWeight={"bold"}
       >
-        <Text>My चर्चा</Text>
-        <Button
-          color={"black"}
-          d="flex"
-          fontSize={{ base: "17px", md: "10px", lg: "17px" }}
-          rightIcon={<AddIcon />}
+        <Text
+          // responsive font size
+          fontSize={{ base: "24px", md: "30px" }}
         >
-          New Group Chat
-        </Button>
+          My चर्चा
+        </Text>
+        <GroupChatModal>
+          <Button
+            color={"black"}
+            d="flex"
+            fontSize={{ base: "17px", md: "10px", lg: "17px" }}
+            rightIcon={<AddIcon />}
+          >
+            New Group Chat
+          </Button>
+        </GroupChatModal>
       </HStack>
 
       <Box

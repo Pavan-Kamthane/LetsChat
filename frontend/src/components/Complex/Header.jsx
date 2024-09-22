@@ -161,11 +161,16 @@ const Header = () => {
 
             <MenuList bg={"white"}>
               <ProfileModal user={user}>
-                <MenuItem>My Profile</MenuItem>
+                <MenuItem bg={'white'} _hover={"white"}>My Profile</MenuItem>
               </ProfileModal>
               {/* <Divider bg={'black'} /> */}
               <MenuDivider bg={"black"} />
-              <MenuItem color={"black"} bg={"white"} onClick={logoutHandler}>
+              <MenuItem
+                color={"black"}
+                bg={"white"}
+                _hover={"white"}
+                onClick={logoutHandler}
+              >
                 Logout
               </MenuItem>
             </MenuList>
