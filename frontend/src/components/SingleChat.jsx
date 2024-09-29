@@ -1,21 +1,69 @@
 import React, { useState } from "react";
 import { ChatState } from "../Context/ChatProvider";
-import { Box, FormControl, IconButton, Input, Spinner, Text } from "@chakra-ui/react";
+import {
+  Box,
+  FormControl,
+  IconButton,
+  Input,
+  Spinner,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { getSender, getSenderFull } from "../config/ChatLogics";
 import ProfileModal from "./Complex/ProfileModal";
 import UpdateGroupChatModal from "./Complex/UpdateGroupChatModal";
+import axios from "axios";
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const { selectedChat, setSelectedChat, user, notification, setNotification } =
     ChatState();
 
-    const [message, setMessage] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [newMessage, setNewMessage] = useState();
+  const [message, setMessage] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [newMessage, setNewMessage] = useState();
+  const toast = useToast();
 
-    const sendMessage = ()=>{}
-    const typingHandler = () => {};
+
+  const fetchMessages = async ()={}
+
+  const sendMessage = async (event) => {
+    if (event.key === "Enter" && newMessage) {
+      try {
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        };
+        setNewMessage("");
+        const data = await axios.post(
+          "/api/message",
+          {
+            content: newMessage,
+            chatId: selectedChat._id,
+          },
+          config
+        );
+        console.log(data);
+
+        setMessage([...message, data.data]);
+      } catch (error) {
+        toast({
+          title: "Error Occured",
+          description: error.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    }
+  };
+
+  const typingHandler = (e) => {
+    setNewMessage(e.target.value);
+    // typing indicator logic
+  };
   return (
     <>
       {selectedChat ? (
