@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ChatState } from "../Context/ChatProvider";
 import {
   Box,
@@ -14,18 +14,55 @@ import { getSender, getSenderFull } from "../config/ChatLogics";
 import ProfileModal from "./Complex/ProfileModal";
 import UpdateGroupChatModal from "./Complex/UpdateGroupChatModal";
 import axios from "axios";
+import './style.css'
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const { selectedChat, setSelectedChat, user, notification, setNotification } =
     ChatState();
 
-  const [message, setMessage] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState();
   const toast = useToast();
 
+  const fetchMessages = async () => {
+    if (!selectedChat) return;
 
-  const fetchMessages = async ()={}
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      setLoading(true);
+      const { data } = await axios.get(
+        `/api/message/${selectedChat._id}`,
+        config
+      );
+
+      console.log(data);
+      
+
+      setMessages(data)
+      setLoading(false)
+    } catch (error) {
+      toast({
+        title: "Error fetching messages",
+        description: error.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: 'bottom'
+      })
+    }
+  };
+
+  useEffect(() => {
+    fetchMessages();
+  }, [selectedChat]);
+
+
+
 
   const sendMessage = async (event) => {
     if (event.key === "Enter" && newMessage) {
@@ -47,7 +84,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         );
         console.log(data);
 
-        setMessage([...message, data.data]);
+        setMessages([...messages, data.data]);
       } catch (error) {
         toast({
           title: "Error Occured",
@@ -55,6 +92,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           status: "error",
           duration: 3000,
           isClosable: true,
+          position:'bottom'
         });
       }
     }
@@ -95,6 +133,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 <UpdateGroupChatModal
                   fetchAgain={fetchAgain}
                   setFetchAgain={setFetchAgain}
+                  fetchMessages={fetchMessages}
                 />
               </>
             )}
@@ -121,7 +160,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 color="white"
               />
             ) : (
-              <div>{/* msgs */}</div>
+              <div className="messages">
+                {/* <ScrollableChat messages={messages} /> */}
+              </div>
             )}
 
             <FormControl onKeyDown={sendMessage} isRequired mt={3}>
