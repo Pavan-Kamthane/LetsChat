@@ -1,5 +1,3 @@
-
-
 # 📢 चर्चा (Charcha)
 
 A real-time chat application built using the **MERN** stack. The app allows users to communicate through a clean and intuitive interface with support for real-time messaging.
@@ -18,6 +16,28 @@ A real-time chat application built using the **MERN** stack. The app allows user
 - **Animation**: Framer Motion
 - **State Management**: React Context API
 - **Real-time Communication**: Socket.io (optional, depending on your plan)
+
+---
+
+## 🗂️ File Structure
+
+```
+📦Charcha
+ ┣ 📂backend
+ ┃ ┣ 📂config
+ ┃ ┣ 📂controllers
+ ┃ ┣ 📂data
+ ┃ ┣ 📂middleware
+ ┃ ┣ 📂models
+ ┃ ┗ 📂routes
+ ┃   ┗ 📜server.js
+ ┣ 📂frontend
+ ┃ ┣ 📂public
+ ┃ ┗ 📂src
+ ┣ 📜.env
+ ┣ 📜README.md
+ ┗ 📂node_modules
+```
 
 ---
 
@@ -41,15 +61,11 @@ cd charcha
 ```
 
 ### 2. Backend Setup
-- Navigate to the backend folder:
-```bash
-cd backend
-```
-- Install dependencies:
+- Install dependencies in the main folder:
 ```bash
 npm install
 ```
-- Create a `.env` file in the backend folder and add the following variables:
+- Create a `.env` file in the main folder and add the following variables:
 ```
 MONGO_URI=<Your MongoDB Connection String>
 JWT_SECRET=<Your JWT Secret>
@@ -62,7 +78,7 @@ npm start
 ### 3. Frontend Setup
 - Navigate to the frontend folder:
 ```bash
-cd ../frontend
+cd frontend
 ```
 - Install frontend dependencies:
 ```bash
@@ -83,7 +99,7 @@ The project is currently in development with basic routing and authentication fe
 
 ---
 
-## 🔮 Planned Features
+## 🔮 Planned Features for future
 
 - [ ] Chatrooms for multiple users
 - [ ] Real-time notifications
@@ -116,6 +132,3 @@ For any inquiries, please reach out to:
 **Pavan Kamthane** - [Pavan.Kamthane@studentambassadors.com](mailto:Pavan.Kamthane@studentambassadors.com)
 
 Feel free to open an issue if you find any bugs or have suggestions!
-```
-
-This `README.md` gives potential users and contributors a clear idea of how to set up and contribute to your project. You can update the image paths and repository links as needed.
