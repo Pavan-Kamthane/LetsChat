@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { ChatState } from "../Context/ChatProvider";
-import { Box, IconButton, Text } from "@chakra-ui/react";
+import { Box, FormControl, IconButton, Input, Spinner, Text } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { getSender, getSenderFull } from "../config/ChatLogics";
 import ProfileModal from "./Complex/ProfileModal";
@@ -9,6 +9,13 @@ import UpdateGroupChatModal from "./Complex/UpdateGroupChatModal";
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const { selectedChat, setSelectedChat, user, notification, setNotification } =
     ChatState();
+
+    const [message, setMessage] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [newMessage, setNewMessage] = useState();
+
+    const sendMessage = ()=>{}
+    const typingHandler = () => {};
   return (
     <>
       {selectedChat ? (
@@ -35,7 +42,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 <ProfileModal user={getSenderFull(user, selectedChat.users)} />
               </>
             ) : (
-              <>{selectedChat.chatName.toUpperCase()}
+              <>
+                {selectedChat.chatName.toUpperCase()}
                 <UpdateGroupChatModal
                   fetchAgain={fetchAgain}
                   setFetchAgain={setFetchAgain}
@@ -55,7 +63,43 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             borderRadius={"lg"}
             overflowY={"hidden"}
           >
-            {/* msgs here */}
+            {loading ? (
+              <Spinner
+                size={"xl"}
+                h={20}
+                w={20}
+                alignSelf={"center"}
+                margin={"auto"}
+                color="white"
+              />
+            ) : (
+              <div>{/* msgs */}</div>
+            )}
+
+            <FormControl onKeyDown={sendMessage} isRequired mt={3}>
+              <Input
+                variant="filled"
+                bg="#fff"
+                placeholder="Enter a message"
+                _placeholder={{ color: "#000" }} // Set the placeholder color to black
+                color="#000" // Set the text color to black
+                _hover={{
+                  bg: "#fff", // Maintain white background on hover
+                  borderColor: "#999", // Change border color on hover
+                }}
+                _focus={{
+                  outline: "none", // Remove default outline on focus
+                  borderColor: "#684a14", // Set the border color on focus
+                  boxShadow: "0 0 5px #684a14", // Add shadow on focus
+                }}
+                border="1px solid #ccc" // Set default border
+                borderRadius="8px" // Add rounded corners
+                p={3} // Add padding
+                fontSize="16px" // Set font size
+                onChange={typingHandler}
+                value={newMessage}
+              />
+            </FormControl>
           </Box>
         </>
       ) : (
