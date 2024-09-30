@@ -28,4 +28,28 @@ app.use("/api/message", messageRoutes);
 app.use(notFound)
 app.use(errorHandler)
 
-app.listen(PORT, console.log(`Server is running on port http://localhost:${PORT}`.bgCyan))
+// app.listen(PORT, console.log(`Server is running on port http://localhost:${PORT}`.bgCyan))
+const server = app.listen(PORT, console.log(`Server is running on port http://localhost:${PORT}`.bgCyan))
+
+const io = require('socket.io')(server,{
+    pingTimeOut:60000,
+    cors: {
+        origin: 'http://localhost:3000'
+    }
+})
+
+io.on('connection',(socket)=>{
+    console.log('Connected to sockit io')
+
+    socket.on('setup',(userData)=>{
+        socket.join(userData._id)
+        // console.log(userData._id)
+        socket.emit('connected')
+    })
+
+    socket.on('join chat',(room)=>{
+        socket.join(room)
+        console.log('user join the room ' + room);
+        
+    })
+})

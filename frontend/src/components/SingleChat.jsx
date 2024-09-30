@@ -14,8 +14,13 @@ import { getSender, getSenderFull } from "../config/ChatLogics";
 import ProfileModal from "./Complex/ProfileModal";
 import UpdateGroupChatModal from "./Complex/UpdateGroupChatModal";
 import axios from "axios";
-import './style.css'
+import "./style.css";
 import ScrollableChat from "./ScrollableChat";
+import  io from 'socket.io-client';
+
+
+const ENDPOINT = "http://localhost:5000";
+var socket,selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const { selectedChat, setSelectedChat, user, notification, setNotification } =
@@ -25,6 +30,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState();
   const toast = useToast();
+  const [socketConnected, setSocketConnected] = useState(false);
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -42,10 +48,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       );
 
       console.log(data);
-      
 
-      setMessages(data)
-      setLoading(false)
+      setMessages(data);
+      setLoading(false);
+
+      socket.emit('join chat',selectedChat._id)
     } catch (error) {
       toast({
         title: "Error fetching messages",
@@ -53,17 +60,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         status: "error",
         duration: 3000,
         isClosable: true,
-        position: 'bottom'
-      })
+        position: "bottom",
+      });
     }
   };
 
   useEffect(() => {
     fetchMessages();
   }, [selectedChat]);
-
-
-
 
   const sendMessage = async (event) => {
     if (event.key === "Enter" && newMessage) {
@@ -93,11 +97,18 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           status: "error",
           duration: 3000,
           isClosable: true,
-          position:'bottom'
+          position: "bottom",
         });
       }
     }
   };
+
+
+  useEffect(() => {
+    socket = io(ENDPOINT)
+    socket.emit('setup',user)
+    socket.compress('connection',()=> setSocketConnected(true))
+  }, []);
 
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
