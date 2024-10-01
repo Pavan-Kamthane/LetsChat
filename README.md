@@ -2,7 +2,8 @@
 
 A real-time chat application built using the **MERN** stack. The app allows users to communicate through a clean and intuitive interface with support for real-time messaging.
 
-![UI Preview](image-2.png)
+![UI Preview](https://github.com/user-attachments/assets/371239db-ba66-48a7-9642-3431129b4ab4)
+
 
 ---
 
@@ -93,7 +94,7 @@ npm start
 
 ## 🖼️ Current Project Status
 
-![UI Screenshot](image-2.png)
+![UI Preview](https://github.com/user-attachments/assets/371239db-ba66-48a7-9642-3431129b4ab4)
 
 The project is currently in development with basic routing and authentication features in place.
 
