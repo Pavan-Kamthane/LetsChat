@@ -29,6 +29,9 @@ import axios from "axios";
 import ChatLoading from "../ChatLoading";
 import UserListItem from "../User/UserListItem";
 import { Spinner } from "@chakra-ui/spinner";
+import { getSender } from "../../config/ChatLogics";
+import NotificationBadge from "react-notification-badge";
+import { Effect } from "react-notification-badge";
 
 
 const Header = () => {
@@ -42,7 +45,14 @@ const Header = () => {
     localStorage.removeItem("userInfo");
     history.push("/");
   };
-  const { user, setSelectedChat, chats, setChats } = ChatState();
+  const {
+    user,
+    setSelectedChat,
+    chats,
+    setChats,
+    notification,
+    setNotification,
+  } = ChatState();
 
   const toast = useToast();
 
@@ -141,9 +151,29 @@ const Header = () => {
         <div>
           <Menu>
             <MenuButton p={1}>
+              <NotificationBadge 
+                count = {notification.length}
+                effect = {Effect.SCALE}
+              />
               <BellIcon fontSize={"2xl"} m={1} />
             </MenuButton>
-            {/* <MenuList></MenuList> */}
+            <MenuList color={"white"} bg={"black"}>
+              {!notification.length && (
+                <MenuItem bg={"black"}> No notifications</MenuItem>
+              )}
+              {notification.map((notif) => (
+                <MenuItem key={notif._id} bg={"black"} onClick={()=>{
+                  setSelectedChat(notif.chat)
+                  setNotification(notification.filter((n)=> n!== notif))
+                }}>
+                  <Text color={"orange"} fontWeight={'bold'}>
+                    {notif.chat.isGroupChat
+                      ? `New message in ${notif.chat.chatName}`
+                      : `New message from  ${getSender(user,notif.chat.users)}`}
+                  </Text>
+                </MenuItem>
+              ))}
+            </MenuList>
           </Menu>
           <Menu>
             <MenuButton
@@ -161,7 +191,9 @@ const Header = () => {
 
             <MenuList bg={"white"}>
               <ProfileModal user={user}>
-                <MenuItem bg={'white'} _hover={"white"}>My Profile</MenuItem>
+                <MenuItem bg={"white"} _hover={"white"}>
+                  My Profile
+                </MenuItem>
               </ProfileModal>
               {/* <Divider bg={'black'} /> */}
               <MenuDivider bg={"black"} />
