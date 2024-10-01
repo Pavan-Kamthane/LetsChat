@@ -16,11 +16,10 @@ import UpdateGroupChatModal from "./Complex/UpdateGroupChatModal";
 import axios from "axios";
 import "./style.css";
 import ScrollableChat from "./ScrollableChat";
-import  io from 'socket.io-client';
-
+import io from "socket.io-client";
 
 const ENDPOINT = "http://localhost:5000";
-var socket,selectedChatCompare;
+var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const { selectedChat, setSelectedChat, user, notification, setNotification } =
@@ -31,6 +30,16 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [newMessage, setNewMessage] = useState();
   const toast = useToast();
   const [socketConnected, setSocketConnected] = useState(false);
+
+ useEffect(() => {
+   socket = io(ENDPOINT);
+   socket.emit("setup", user);
+   socket.on("connected", () => setSocketConnected(true));
+  //  socket.on("typing", () => setIsTyping(true));
+  //  socket.on("stop typing", () => setIsTyping(false));
+
+   // eslint-disable-next-line
+ }, []);
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -52,7 +61,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       setMessages(data);
       setLoading(false);
 
-      socket.emit('join chat',selectedChat._id)
+      socket.emit("join chat", selectedChat._id);
     } catch (error) {
       toast({
         title: "Error fetching messages",
@@ -65,50 +74,62 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     }
   };
 
+   useEffect(() => {
+     fetchMessages();
+
+     selectedChatCompare = selectedChat;
+     // eslint-disable-next-line
+   }, [selectedChat]);
+
   useEffect(() => {
-    fetchMessages();
-  }, [selectedChat]);
+    socket.on("message recieved", (newMessageRecieved) => {
+      if (
+        !selectedChatCompare || // if chat is not selected or doesn't match current chat
+        selectedChatCompare._id !== newMessageRecieved.chat._id
+      ) {
+        // give notification
+      } else {
+        setMessages([...messages, newMessageRecieved]);
+      }
+    });
+  });
+
+  
 
   const sendMessage = async (event) => {
     if (event.key === "Enter" && newMessage) {
+      socket.emit("stop typing", selectedChat._id);
       try {
         const config = {
           headers: {
-            "Content-Type": "application/json",
+            "Content-type": "application/json",
             Authorization: `Bearer ${user.token}`,
           },
         };
         setNewMessage("");
-        const data = await axios.post(
+        const { data } = await axios.post(
           "/api/message",
           {
             content: newMessage,
-            chatId: selectedChat._id,
+            chatId: selectedChat,
           },
           config
         );
-        console.log(data);
-
-        setMessages([...messages, data.data]);
+        socket.emit("new message", data);
+        setMessages([...messages, data]);
       } catch (error) {
         toast({
-          title: "Error Occured",
-          description: error.message,
+          title: "Error Occured!",
+          description: "Failed to send the Message",
           status: "error",
-          duration: 3000,
+          duration: 5000,
           isClosable: true,
           position: "bottom",
         });
       }
     }
   };
-
-
-  useEffect(() => {
-    socket = io(ENDPOINT)
-    socket.emit('setup',user)
-    socket.compress('connection',()=> setSocketConnected(true))
-  }, []);
+  
 
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
