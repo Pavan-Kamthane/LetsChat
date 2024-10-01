@@ -24,6 +24,7 @@ const ProfileModal = ({ user, children }) => {
           cursor={"pointer"}
           size={"sm"}
           m={1}
+          src={user?.pic}
         />
       )}
 
