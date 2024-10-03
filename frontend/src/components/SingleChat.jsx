@@ -111,7 +111,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
 
   useEffect(() => {
-    socket = io(ENDPOINT);
+    socket = io(ENDPOINT, {
+      transports: ["websocket"], // Force WebSocket to be used
+    });
     socket.emit("setup", user);
     socket.on("connected", () => setSocketConnected(true));
     socket.on("typing", () => setIsTyping(true));

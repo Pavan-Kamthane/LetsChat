@@ -53,10 +53,12 @@ const server = app.listen(
 const io = require("socket.io")(server, {
     pingTimeout: 60000,
     cors: {
-        origin: "http://localhost:3000",
-        // credentials: true,
+        origin: 'https://charcha-o4vh.onrender.com/' || "http://localhost:3000", // Change this to your frontend's Render URL
+        methods: ["GET", "POST"],
+        credentials: true,
     },
 });
+
 
 io.on("connection", (socket) => {
     console.log("Connected to socket.io");
