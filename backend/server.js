@@ -1,35 +1,27 @@
-const express = require('express');
-const chats = require('./data/data.js');
-const dotenv = require('dotenv');
-const connetDB = require('./config/db.js');
-const colors = require('colors');
-const userRoutes = require('./routes/userRoutes');
-const chatRoutes = require('./routes/chatRoutes');
+const express = require("express");
+const connectDB = require("./config/db");
+const dotenv = require("dotenv");
+const userRoutes = require("./routes/userRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
-const { errorHandler, notFound } = require('./middleware/errorMiddleware.js');
-// const cors = require('cors');
-const path = require('path')
+const { notFound, errorHandler } = require("./middleware/errorMiddleware");
+const path = require("path");
 
-
-
-const app = express()
 dotenv.config();
-connetDB()
-const PORT = process.env.PORT || 5000
+connectDB();
+const app = express();
 
-// if deployment nsel tr khlch un comment kr ok
+app.use(express.json()); // to accept json data
 
 // app.get("/", (req, res) => {
-//     res.send("API is running")
-// })
+//   res.send("API Running!");
+// });
 
-
-app.use(express.json())
-app.use('/api/user', userRoutes)
-app.use('/api/chat', chatRoutes)
+app.use("/api/user", userRoutes);
+app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
 
-// ----------------------Deployment --------------------
+// --------------------------deployment------------------------------
 
 const __dirname1 = path.resolve();
 
@@ -45,20 +37,26 @@ if (process.env.NODE_ENV === "production") {
     });
 }
 
-// ----------------------Deployment --------------------
+// --------------------------deployment------------------------------
 
-app.use(notFound)
-app.use(errorHandler)
+// Error Handling middlewares
+app.use(notFound);
+app.use(errorHandler);
 
-// app.listen(PORT, console.log(`Server is running on port http://localhost:${PORT}`.bgCyan))
-const server = app.listen(PORT, console.log(`Server is running on port http://localhost:${PORT}`.bgCyan))
+const PORT = process.env.PORT;
 
-const io = require('socket.io')(server, {
-    pingTimeOut: 60000,
+const server = app.listen(
+    PORT,
+    console.log(`Server running on PORT ${PORT}...`.yellow.bold)
+);
+
+const io = require("socket.io")(server, {
+    pingTimeout: 60000,
     cors: {
-        origin: 'http://localhost:3000'
-    }
-})
+        origin: "http://localhost:3000",
+        // credentials: true,
+    },
+});
 
 io.on("connection", (socket) => {
     console.log("Connected to socket.io");
@@ -71,7 +69,6 @@ io.on("connection", (socket) => {
         socket.join(room);
         console.log("User Joined Room: " + room);
     });
-
     socket.on("typing", (room) => socket.in(room).emit("typing"));
     socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
 
